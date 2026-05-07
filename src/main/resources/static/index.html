@@ -28,11 +28,11 @@
                 </div>
             </div>
             <div class="header-actions">
-                <div class="stats-badge">
+                <div class="stats-badge" onclick="showInfoModal('services')">
                     <i class="fas fa-server"></i>
                     <span id="serviceCount">Loading...</span>
                 </div>
-                <div class="stats-badge">
+                <div class="stats-badge" onclick="showInfoModal('providers')">
                     <i class="fas fa-cloud-provider"></i>
                     <span id="providerCount">Loading...</span>
                 </div>
@@ -343,6 +343,17 @@
                 <span class="provider-badge alibaba"><i class="fas fa-server"></i> Alibaba Cloud</span>
             </div>
         </footer>
+    </div>
+
+    <!-- Generic Modal -->
+    <div id="infoModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeInfoModal()">&times;</button>
+            <h2 id="infoModalTitle">Info</h2>
+            <div id="infoModalBody" class="modal-body">
+                <!-- Content injected here -->
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

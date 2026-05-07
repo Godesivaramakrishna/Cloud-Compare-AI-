@@ -57,11 +57,11 @@ let currentCategory = 'compute';
 
 // Platform colors for charts
 const platformColors = {
-    'AWS': '#d4a017',
-    'GCP': '#f5d060',
-    'Azure': '#c9a84c',
-    'OCI': '#b8860b',
-    'Alibaba': '#8b6914'
+    'AWS': '#FF9900',
+    'GCP': '#4285F4',
+    'Azure': '#0089D6',
+    'OCI': '#F80000',
+    'Alibaba': '#FF6A00'
 };
 
 // Platform icons
@@ -1333,6 +1333,91 @@ function displayAiRecommendations(tools) {
     });
 })();
 
+// =========================================
+// MODAL LOGIC
+// =========================================
+function showInfoModal(type) {
+    const modal = document.getElementById('infoModal');
+    const title = document.getElementById('infoModalTitle');
+    const body = document.getElementById('infoModalBody');
+    
+    if (!modal || !title || !body) return;
+    
+    body.innerHTML = ''; // Clear previous content
+    
+    if (type === 'services') {
+        title.innerHTML = '<i class="fas fa-server"></i> Cloud Service Types (54 Total)';
+        
+        // Define service types grouped by category
+        const serviceCategories = [
+            { name: 'Compute (12)', icon: 'fa-microchip', color: '#3b82f6', items: ['Virtual Machines', 'Containers', 'Kubernetes', 'Serverless Functions', 'Dedicated Hosts', 'Bare Metal', 'GPU Instances', 'HPC Clusters', 'Spot/Preemptible Instances', 'Edge Compute', 'Batch Processing', 'Web Apps'] },
+            { name: 'Storage (9)', icon: 'fa-database', color: '#10b981', items: ['Object Storage', 'Block Storage', 'File Storage', 'Archive Storage', 'Backup Services', 'Disaster Recovery', 'Content Delivery Network (CDN)', 'Edge Storage', 'Storage Gateways'] },
+            { name: 'Database (13)', icon: 'fa-server', color: '#f59e0b', items: ['Relational Database (SQL)', 'NoSQL Document Store', 'Key-Value Store', 'In-Memory Cache', 'Time Series Database', 'Graph Database', 'Ledger Database', 'Data Warehouse', 'Vector Database', 'Managed MySQL', 'Managed PostgreSQL', 'Managed MongoDB', 'Managed Redis'] },
+            { name: 'AI Services (20)', icon: 'fa-brain', color: '#8b5cf6', items: ['Generative AI Models', 'Large Language Models (LLMs)', 'Image Generation', 'Text-to-Speech', 'Speech-to-Text', 'Computer Vision', 'Video Analysis', 'Translation Services', 'Natural Language Processing (NLP)', 'Sentiment Analysis', 'Personalization/Recommendations', 'Fraud Detection', 'Forecasting', 'Document AI / OCR', 'AutoML', 'Machine Learning Platforms', 'MLOps Services', 'Data Labeling', 'Conversational AI / Chatbots', 'AI Code Assistants'] }
+        ];
+        
+        serviceCategories.forEach(cat => {
+            const group = document.createElement('div');
+            group.innerHTML = `<h3 style="color: ${cat.color}; margin-top: 1rem; margin-bottom: 0.5rem;"><i class="fas ${cat.icon}"></i> ${cat.name}</h3>`;
+            
+            const list = document.createElement('div');
+            list.style.display = 'grid';
+            list.style.gridTemplateColumns = 'repeat(auto-fill, minmax(200px, 1fr))';
+            list.style.gap = '0.5rem';
+            
+            cat.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'modal-list-item';
+                itemDiv.style.padding = '0.5rem';
+                itemDiv.innerHTML = `<i class="fas fa-check" style="color: #6ee7b7;"></i> <span style="font-size: 0.9rem;">${item}</span>`;
+                list.appendChild(itemDiv);
+            });
+            
+            group.appendChild(list);
+            body.appendChild(group);
+        });
+        
+    } else if (type === 'providers') {
+        title.innerHTML = '<i class="fas fa-cloud"></i> Cloud Providers (5)';
+        
+        const providers = [
+            { name: 'Amazon Web Services (AWS)', icon: 'fab fa-aws', color: '#FF9900', desc: 'Leading cloud provider with the most extensive array of services.' },
+            { name: 'Google Cloud Platform (GCP)', icon: 'fab fa-google', color: '#4285F4', desc: 'Known for high-performance computing, data analytics, and AI/ML.' },
+            { name: 'Microsoft Azure', icon: 'fab fa-microsoft', color: '#0089D6', desc: 'Deep integration with Microsoft enterprise products and hybrid cloud.' },
+            { name: 'Oracle Cloud Infrastructure (OCI)', icon: 'fas fa-cloud', color: '#F80000', desc: 'Focuses on high-performance database workloads and enterprise apps.' },
+            { name: 'Alibaba Cloud', icon: 'fas fa-server', color: '#FF6A00', desc: 'Dominant provider in Asia with strong e-commerce backend capabilities.' }
+        ];
+        
+        providers.forEach(prov => {
+            const item = document.createElement('div');
+            item.className = 'modal-list-item';
+            item.innerHTML = `
+                <div style="font-size: 2rem; color: ${prov.color}; width: 40px; text-align: center;"><i class="${prov.icon}"></i></div>
+                <div>
+                    <h3 style="margin-bottom: 0.25rem;">${prov.name}</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">${prov.desc}</p>
+                </div>
+            `;
+            body.appendChild(item);
+        });
+    }
+    
+    modal.style.display = 'flex';
+}
+
+function closeInfoModal() {
+    const modal = document.getElementById('infoModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('infoModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
 // Export for potential testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -1340,6 +1425,8 @@ if (typeof module !== 'undefined' && module.exports) {
         displayRecommendation,
         displayCharts,
         displayTable,
-        sortTable
+        sortTable,
+        showInfoModal,
+        closeInfoModal
     };
 }
