@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cloudcompare-ai-app
+    ports:
+      - "5000:5000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - cloudcompare-network
+    depends_on:
+      - h2-console
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  h2-console:
+    image: h2:latest
+    container_name: cloudcompare-h2
+    ports:
+      - "8082:8082"
+    environment:
+      DB_CLOSE_DELAY: "-1"
+    networks:
+      - cloudcompare-network
+    restart: unless-stopped
+
+networks:
+  cloudcompare-network:
+    driver: bridge
